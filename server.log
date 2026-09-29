@@ -16,3 +16,7 @@ INFO:     127.0.0.1:48714 - "GET /static/app.js HTTP/1.1" 200 OK
 INFO:     127.0.0.1:48728 - "GET /static/style.css HTTP/1.1" 200 OK
 INFO:     127.0.0.1:48744 - "GET /api/categories HTTP/1.1" 200 OK
 INFO:     127.0.0.1:48750 - "GET /api/products?q=shampoo&size=2 HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [10310]

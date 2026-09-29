@@ -2,7 +2,7 @@
 name = "nexashop-recsys"
 version = "0.1.0"
 description = "Hybrid AI e-commerce recommendation system (CBF + CF + ARM)"
-requires-python = ">=3.10"
+requires-python = ">=3.9"
 dependencies = [
     "pandas>=2.0",
     "numpy>=1.26",

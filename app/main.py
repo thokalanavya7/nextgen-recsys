@@ -2,6 +2,8 @@
 and the recommendation service (application layer of the architecture).
 """
 import os
+from typing import Optional
+
 import numpy as np
 import pandas as pd
 from fastapi import FastAPI, HTTPException, Request, Response
@@ -140,7 +142,7 @@ def product_detail(req: Request, asin: str):
 class Interaction(BaseModel):
     asin: str
     event: str            # view | click | rate | purchase
-    rating: float | None = None
+    rating: Optional[float] = None
 
 
 @app.post("/api/interactions")
