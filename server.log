@@ -1,0 +1,13 @@
+INFO:     Started server process [10310]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:38318 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47450 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42816 - "POST /api/signup HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42822 - "GET /api/recommendations?k=3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42830 - "POST /api/interactions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42838 - "POST /api/interactions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42850 - "GET /api/recommendations?k=3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42854 - "POST /api/demo HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42856 - "GET /api/recommendations?k=3 HTTP/1.1" 200 OK

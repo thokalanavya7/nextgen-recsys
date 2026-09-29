@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NexaShop - Hybrid Recommendation Storefront</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <div class="brand" onclick="location.reload()">Nexa<span>Shop</span></div>
+  <input id="search" type="search" placeholder="Search products..." oninput="debouncedSearch()">
+  <div class="user-box">
+    <span id="whoami"></span>
+    <button id="demoBtn" onclick="demoLogin()">Try demo user</button>
+    <button id="authBtn" onclick="authAction()">Sign in</button>
+  </div>
+</header>
+
+<div id="authModal" class="modal hidden">
+  <div class="modal-card small">
+    <h3>Sign in / Create account</h3>
+    <input id="username" placeholder="username" autocomplete="username">
+    <input id="password" type="password" placeholder="password" autocomplete="current-password">
+    <div class="row">
+      <button onclick="doLogin()">Sign in</button>
+      <button onclick="doSignup()" class="ghost">Create account</button>
+    </div>
+    <p class="muted" id="authMsg"></p>
+    <button class="close" onclick="hide('authModal')">✕</button>
+  </div>
+</div>
+
+<div class="layout">
+  <aside>
+    <h4>Categories</h4>
+    <ul id="catList"></ul>
+  </aside>
+  <main>
+    <section id="recSection" class="hidden">
+      <h2>Recommended for you <span id="recBadge" class="badge"></span></h2>
+      <div id="recs" class="rec-strip"></div>
+    </section>
+    <section>
+      <h2 id="gridTitle">Browse products</h2>
+      <div id="grid" class="grid"></div>
+      <div class="pager">
+        <button onclick="prevPage()">‹ Prev</button>
+        <span id="pageInfo"></span>
+        <button onclick="nextPage()">Next ›</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="detailModal" class="modal hidden">
+  <div class="modal-card">
+    <button class="close" onclick="hide('detailModal')">✕</button>
+    <div class="detail">
+      <img id="dImg" alt="">
+      <div class="dinfo">
+        <h3 id="dTitle"></h3>
+        <p class="muted"><span id="dBrand"></span> · <span id="dCat"></span></p>
+        <p id="dPrice" class="price"></p>
+        <p id="dDesc"></p>
+        <div class="stars" id="dStars"></div>
+        <div class="row">
+          <button onclick="purchase()">Buy now</button>
+          <button onclick="rate()" class="ghost">Submit rating</button>
+        </div>
+        <p class="muted" id="dMsg"></p>
+      </div>
+    </div>
+    <h4>Similar products</h4>
+    <div id="similar" class="rec-strip"></div>
+  </div>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

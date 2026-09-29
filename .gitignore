@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+data/raw/
+data/processed/
+artifacts/
+*.db
+.env
+.DS_Store
+nohup.out
+download.log

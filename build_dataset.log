@@ -1,0 +1,9 @@
+loading product metadata...
+products: 12094
+loading reviews...
+raw interactions: 198502
+after join with catalog: 198371
+after 5-core filter: 198215 interactions, 22332 users, 12086 items
+scoring review sentiment (VADER)...
+train: 175883  test: 22332
+wrote processed files to /home/ubuntu/repos/nextgen-recsys/scripts/../data/processed

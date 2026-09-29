@@ -1,0 +1,19 @@
+evaluating 2000 users @ k=10
+  200/2000 users
+  400/2000 users
+  600/2000 users
+  800/2000 users
+  1000/2000 users
+  1200/2000 users
+  1400/2000 users
+  1600/2000 users
+  1800/2000 users
+  2000/2000 users
+        model  precision@10  recall@10  f1@10  map@10  n_users
+   popularity        0.0007     0.0070 0.0013  0.0015     2000
+      content        0.0070     0.0705 0.0128  0.0287     2000
+collaborative        0.0009     0.0090 0.0016  0.0026     2000
+  association        0.0008     0.0075 0.0014  0.0047     2000
+       hybrid        0.0065     0.0650 0.0118  0.0363     2000
+elapsed: 136.9s
+wrote /home/ubuntu/repos/nextgen-recsys/scripts/../artifacts/evaluation.csv

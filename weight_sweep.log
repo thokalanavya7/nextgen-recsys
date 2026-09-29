@@ -1,0 +1,4 @@
+default: hitrate=0.0633 P@10=0.0063 MAP=0.0348
+content+: hitrate=0.0683 P@10=0.0068 MAP=0.0346
+cbf/cf: hitrate=0.0625 P@10=0.0063 MAP=0.0331
+balanced: hitrate=0.0667 P@10=0.0067 MAP=0.0353
