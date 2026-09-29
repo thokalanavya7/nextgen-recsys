@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/home/ubuntu/repos/nextgen-recsys/scripts/evaluate_ratings.py", line 97, in <module>
+    main()
+  File "/home/ubuntu/repos/nextgen-recsys/scripts/evaluate_ratings.py", line 62, in main
+    neg = all_items[rng.integers(len(all_items))]
+TypeError: len() of unsized object

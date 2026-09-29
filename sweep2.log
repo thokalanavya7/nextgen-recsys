@@ -1,0 +1,5 @@
+v-old: hit=0.0660 MAP=0.0275
+v-svd05: hit=0.0650 MAP=0.0274
+v-svd10: hit=0.0620 MAP=0.0268
+v-svd15: hit=0.0630 MAP=0.0263
+v-nosvd: hit=0.0630 MAP=0.0270

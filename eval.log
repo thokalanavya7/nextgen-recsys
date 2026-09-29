@@ -14,6 +14,7 @@ evaluating 2000 users @ k=10
       content        0.0070     0.0705 0.0128  0.0287     2000
 collaborative        0.0009     0.0090 0.0016  0.0026     2000
   association        0.0008     0.0075 0.0014  0.0047     2000
-       hybrid        0.0065     0.0650 0.0118  0.0363     2000
-elapsed: 136.9s
+          svd        0.0004     0.0045 0.0008  0.0010     2000
+       hybrid        0.0069     0.0690 0.0125  0.0355     2000
+elapsed: 287.8s
 wrote /home/ubuntu/repos/nextgen-recsys/scripts/../artifacts/evaluation.csv

@@ -27,15 +27,16 @@ def average_precision(hit_ranks, k):
 
 
 def evaluate(engine, test_users, train_history, test_truth, k):
+    off = {"content": 0, "collaborative": 0, "association": 0,
+           "svd": 0, "popularity": 0, "sentiment": 0}
+    def v(**kw):
+        d = dict(off); d.update(kw); return d
     variants = {
-        "popularity": {"content": 0, "collaborative": 0, "association": 0,
-                       "popularity": 1, "sentiment": 0},
-        "content": {"content": 1, "collaborative": 0, "association": 0,
-                    "popularity": 0, "sentiment": 0},
-        "collaborative": {"content": 0, "collaborative": 1,
-                          "association": 0, "popularity": 0, "sentiment": 0},
-        "association": {"content": 0, "collaborative": 0,
-                        "association": 1, "popularity": 0, "sentiment": 0},
+        "popularity": v(popularity=1),
+        "content": v(content=1),
+        "collaborative": v(collaborative=1),
+        "association": v(association=1),
+        "svd": v(svd=1),
         "hybrid": dict(DEFAULT_WEIGHTS),
     }
     metrics = {v: {"p": [], "r": [], "f1": [], "ap": []} for v in variants}

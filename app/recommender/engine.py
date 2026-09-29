@@ -13,7 +13,7 @@ import numpy as np
 import pandas as pd
 
 from .models import (AssociationRuleModel, CollaborativeModel,
-                     ContentBasedModel, PopularityModel)
+                     ContentBasedModel, PopularityModel, SVDModel)
 
 PROCESSED = os.environ.get(
     "DATA_DIR",
@@ -24,8 +24,8 @@ ARTIFACTS = os.environ.get(
 
 # hybrid weights, tuned on a held-out user sample (see artifacts/evaluation.csv)
 DEFAULT_WEIGHTS = {
-    "content": 0.35, "collaborative": 0.30, "association": 0.15,
-    "popularity": 0.10, "sentiment": 0.10,
+    "content": 0.30, "collaborative": 0.30, "association": 0.15,
+    "svd": 0.05, "popularity": 0.10, "sentiment": 0.10,
 }
 
 
@@ -42,7 +42,7 @@ class RecommenderEngine:
         os.makedirs(ARTIFACTS, exist_ok=True)
         joblib.dump({k: getattr(self, k) for k in
                      ("popularity", "content", "collaborative",
-                      "association", "catalog")},
+                      "association", "svd", "catalog")},
                     os.path.join(ARTIFACTS, "models.joblib"), compress=3)
         self.ready = True
         return self
@@ -62,6 +62,8 @@ class RecommenderEngine:
         self.content = ContentBasedModel().fit(docs)
         print("fitting collaborative (item-item cosine)...")
         self.collaborative = CollaborativeModel().fit(train, self.content.asins)
+        print("fitting matrix factorisation (SVD)...")
+        self.svd = SVDModel().fit(train, self.content.asins)
         print("mining association rules (FP-Growth)...")
         self.association = AssociationRuleModel().fit(train)
         self.catalog = prods.set_index("asin")
@@ -80,6 +82,7 @@ class RecommenderEngine:
         scores["content"] = self.content.score(items, user_items)
         scores["collaborative"] = self.collaborative.score(items, user_items)
         scores["association"] = self.association.score(items, user_items)
+        scores["svd"] = self.svd.score(items, user_items)
         scores["popularity"] = self.popularity.score(items)
         sent = self.catalog.reindex(items)["item_sentiment"].fillna(0)
         scores["sentiment"] = np.clip((sent.to_numpy() + 1.0) / 2.0, 0, 1)
@@ -129,6 +132,8 @@ class RecommenderEngine:
                                    f"'{st}' - this ranks close to it")
                 else:
                     reasons.append("Recommended by collaborative filtering")
+            elif c == "svd":
+                reasons.append("Predicted to match your taste profile")
             elif c == "association":
                 rule = self.association.explain(user_items, asin)
                 if rule:

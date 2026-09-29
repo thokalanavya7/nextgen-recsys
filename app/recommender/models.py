@@ -154,6 +154,86 @@ class CollaborativeModel:
         return out
 
 
+class SVDModel:
+    """Matrix factorisation (TruncatedSVD) on the rating-residual matrix.
+
+    Predicts an absolute rating: mu + user_bias + item_bias + latent dot.
+    Works for cold-start users too (degenerates to the bias model).
+    """
+
+    name = "svd"
+
+    def __init__(self, n_factors=64, shrink=5.0):
+        self.n_factors = n_factors
+        self.shrink = shrink
+
+    def fit(self, train: pd.DataFrame, asins):
+        from sklearn.decomposition import TruncatedSVD
+        self.asin_index = {a: i for i, a in enumerate(asins)}
+        users = {u: i for i, u in enumerate(train["user"].unique())}
+        rows = train["user"].map(users).to_numpy()
+        cols = train["asin"].map(self.asin_index).to_numpy()
+        data = train["rating"].to_numpy(dtype=np.float64)
+
+        self.mu = float(data.mean())
+        cnt_u = np.bincount(rows, minlength=len(users))
+        cnt_i = np.bincount(cols, minlength=len(asins))
+        sum_u = np.bincount(rows, weights=data - self.mu, minlength=len(users))
+        sum_i = np.bincount(cols, weights=data - self.mu, minlength=len(asins))
+        bu = sum_u / (cnt_u + self.shrink)
+        bi = sum_i / (cnt_i + self.shrink)
+        self.user_bias = dict(zip(users.keys(), bu))
+        self.item_bias = np.clip(bi, -2, 2)
+
+        resid = data - self.mu - bu[rows] - self.item_bias[cols]
+        mat = csr_matrix((resid, (rows, cols)),
+                         shape=(len(users), len(asins)))
+        k = max(1, min(self.n_factors, min(mat.shape) - 1))
+        self.svd = TruncatedSVD(n_components=k, random_state=42)
+        self.svd.fit(mat)
+        self.item_factors = self.svd.components_.T.astype(np.float32)
+        return self
+
+    def predict(self, user_items, item, user_id=None):
+        """Predicted rating for one item."""
+        if item not in self.asin_index:
+            return self.mu
+        base = (self.mu + self.user_bias.get(user_id, 0.0)
+                + self.item_bias[self.asin_index[item]])
+        if user_items:
+            vec = np.zeros(len(self.asin_index), dtype=np.float32)
+            for a, r in user_items.items():
+                if a in self.asin_index:
+                    vec[self.asin_index[a]] = (
+                        float(r) - self.mu - self.item_bias[self.asin_index[a]])
+            uk = vec @ self.item_factors
+            base += float(uk @ self.item_factors[self.asin_index[item]])
+        return float(np.clip(base, 1.0, 5.0))
+
+    def score(self, items, user_items):
+        items = list(items)
+        idx = np.array([self.asin_index[a] for a in items
+                        if a in self.asin_index])
+        out = np.zeros(len(items), dtype=np.float32)
+        if len(idx) == 0:
+            return out
+        base = self.mu + self.item_bias[idx]
+        if user_items:
+            vec = np.zeros(len(self.asin_index), dtype=np.float32)
+            for a, r in user_items.items():
+                if a in self.asin_index:
+                    vec[self.asin_index[a]] = (
+                        float(r) - self.mu - self.item_bias[self.asin_index[a]])
+            uk = vec @ self.item_factors
+            base = base + uk @ self.item_factors[idx].T
+        pred = np.clip(base, 1.0, 5.0)
+        pos = {self.asin_index[a]: i for i, a in enumerate(items)
+               if a in self.asin_index}
+        for j, i in enumerate(idx):
+            out[pos[i]] = (pred[j] - 1.0) / 4.0
+        return out
+
+
 class AssociationRuleModel:
     """FP-Growth association rules mined from users' purchase baskets.
 
